@@ -15,6 +15,7 @@ COPY src/hashes requirements.txt ./
 
 # Download sources and verify hashes
 RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}"
+RUN wget -O weewx-mqtt-sub.zip https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/v2.0.0.zip
 RUN wget -O weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip
 RUN wget -O weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip
 RUN sha256sum -c < hashes
@@ -32,6 +33,7 @@ WORKDIR ${WEEWX_HOME}
 
 RUN bin/wee_extension --install /tmp/weewx-mqtt.zip
 RUN bin/wee_extension --install /tmp/weewx-interceptor.zip
+RUN bin/wee_extension --install /tmp/weewx-mqtt-sub.zip
 COPY src/entrypoint.sh src/version.txt ./
 
 FROM python:3-slim as stage-2
