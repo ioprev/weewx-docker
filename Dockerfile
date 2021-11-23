@@ -27,7 +27,8 @@ RUN chown -R weewx:weewx ${WEEWX_HOME}
 # Python setup
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache --requirement requirements.txt
+RUN pip install --no-cache --upgrade pip
+RUN pip install --no-cache --upgrade --requirement requirements.txt
 
 WORKDIR ${WEEWX_HOME}
 
@@ -54,6 +55,14 @@ RUN addgroup --system --gid ${WEEWX_UID} weewx \
   && adduser --system --uid ${WEEWX_UID} --ingroup weewx weewx
 
 RUN apt-get update && apt-get install -y libusb-1.0-0 gosu busybox-syslogd tzdata
+RUN apt-get update && apt-get install -y gcc linux-libc-dev libjpeg62-turbo libjpeg62-turbo-dev zlib1g zlib1g-dev
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache --upgrade Pillow
+
+RUN apt-get update && apt-get --purge remove -y gcc linux-libc-dev libjpeg62-turbo-dev zlib1g-dev
+RUN apt-get update && apt-get --purge autoremove -y
 
 WORKDIR ${WEEWX_HOME}
 

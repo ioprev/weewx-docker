@@ -11,16 +11,22 @@ services:
         - VERSION=4.5.1
       context: .
       dockerfile: Dockerfile
-    image: felddy/weewx:4.5.1
+    image: ioprev/weewx:4.5.1
+    network_mode: host
+    container_name: weewx
     init: true
     restart: "no"
     # devices:
     #   - "/dev/ttyUSB0:/dev/ttyUSB0"
+    #user: 1001:1001
     volumes:
       - type: bind
-        source: ./data
+        source: /var/weewx
         target: /data
+      - type: bind
+        source: /dev/log
+        target: /dev/log
     environment:
       - TIMEZONE=US/Eastern
       - WEEWX_UID=weewx
-      - WEEWX_GID=dialout
+      - WEEWX_GID=weewx
